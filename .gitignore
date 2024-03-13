@@ -6,6 +6,7 @@ __pycache__/
 # Poetry
 __pypackages__/
 .pyre/
+poetry.lock
 
 # Virtualenv
 .venv
