@@ -13,11 +13,12 @@ from src.utils.paths import DATA_DIR
 load_dotenv()
 API_KEY = os.getenv('API_KEY')
 
+mbajk_url = 'https://api.jcdecaux.com/vls/v1/stations?contract=maribor&apiKey=5e150537116dbc1786ce5bec6975a8603286526b'
 
 def fetch_and_process_data() -> None:
     logger.log_info('Fetching data from API...')
     try:
-        response = requests.get(f'https://api.jcdecaux.com/vls/v1/stations?contract=maribor&apiKey={API_KEY}')
+        response = requests.get(mbajk_url)
         data = response.json()
 
         data_collector = DataCollector(data)

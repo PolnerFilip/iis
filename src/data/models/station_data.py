@@ -1,10 +1,25 @@
-from datetime import datetime
+from datetime import datetime, date
 import os
 
 import pandas as pd
+import requests
 
 from src.utils import logger
 from src.utils.paths import DATA_DIR
+
+
+def merge_station_and_weather_data(station_df: pd.DataFrame, weather_df: pd.DataFrame) -> pd.DataFrame:
+    station_df['last_update'] = pd.to_datetime(station_df['last_update'])
+    weather_df['time'] = pd.to_datetime(weather_df['time'])
+
+    station_df['hour'] = station_df['last_update'].dt.hour
+    weather_df['hour'] = weather_df['time'].dt.hour
+
+    merged_df = pd.merge(station_df, weather_df, on='hour')
+
+    merged_df = merged_df.drop(columns=['hour', 'time'])
+
+    return merged_df
 
 
 class StationData:
@@ -41,16 +56,34 @@ class StationData:
         self.fetched_at = datetime.now()
 
     def save_station_data(self) -> None:
+        weather_df = self.get_weather_data()
+
         file_path = f'{DATA_DIR}/processed/stations/station_{self.number}.csv'
 
         if os.path.exists(file_path):
             df = pd.read_csv(file_path)
         else:
             df = pd.DataFrame(columns=[
-                'number', 'bike_stands', 'available_bike_stands', 'available_bikes', 'last_update', 'fetched_at'
+                'number', 'bike_stands', 'available_bike_stands', 'available_bikes', 'last_update', 'fetched_at',
+                'temperature_2m', 'apparent_temperature', 'precipitation', 'wind_speed_10m', 'is_day'
             ])
 
-        df = pd.concat([df, pd.DataFrame([self.__dict__])], join='inner', ignore_index=True)
+        df_merged = merge_station_and_weather_data(pd.DataFrame([self.__dict__]), weather_df)
+        print(df_merged)
+        df = pd.concat([df, df_merged], join='inner', ignore_index=True)
+
+
         df.to_csv(file_path, index=False)
 
         logger.log_info(f'Station {self.number} data saved.')
+
+    def get_weather_data(self) -> pd.DataFrame:
+        response = requests.get('https://api.open-meteo.com/v1/forecast?'
+                                f'latitude={self.lat}'
+                                f'&longitude={self.lng}'
+                                '&hourly=temperature_2m,apparent_temperature,precipitation,wind_speed_10m,is_day&forecast_days=1')
+
+        data = response.json()
+
+        return pd.DataFrame(data['hourly'])
+
