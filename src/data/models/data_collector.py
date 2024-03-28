@@ -15,8 +15,8 @@ class DataCollector:
     station_data: list[StationData]
     raw_data: list[dict]
 
-    file_path_raw: Final[str] = f'{DATA_DIR}/raw/station_data.csv'
-    file_path_processed: Final[str] = f'{DATA_DIR}/processed/station_data.csv'
+    file_path_raw: Final[str] = 'data/raw/station_data.csv'
+    file_path_processed: Final[str] = 'data/processed/station_data.csv'
 
     def __init__(self, data: list[dict]):
         self.fetched_at = datetime.now()

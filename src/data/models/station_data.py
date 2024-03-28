@@ -58,7 +58,7 @@ class StationData:
     def save_station_data(self) -> None:
         weather_df = self.get_weather_data()
 
-        file_path = f'{DATA_DIR}/processed/stations/station_{self.number}.csv'
+        file_path = f'data/processed/stations/station_{self.number}.csv'
 
         if os.path.exists(file_path):
             df = pd.read_csv(file_path)
