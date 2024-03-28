@@ -1,3 +1,4 @@
 number,bike_stands,available_bike_stands,available_bikes,last_update,fetched_at,temperature_2m,apparent_temperature,precipitation,wind_speed_10m,is_day
 23,20,12,8,2024-03-28 16:41:44,2024-03-28 16:51:11.923625,11.3,8.8,0.6,12.1,1
 23,20,10,10,2024-03-28 17:12:00,2024-03-28 17:16:17.561131,10.3,7.6,0.4,14.4,1
+23,20,12,8,2024-03-28 18:12:33,2024-03-28 18:20:15.201703,9.9,7.9,1.7,10.5,0
