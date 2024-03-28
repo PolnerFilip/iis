@@ -28,7 +28,7 @@ jobs:
 
     - name: Run script
       run: |
-        python src/data/fetch_and_process_data.py
+        python -m src.data.fetch_and_process_data
 
     - name: Commit and push changes
       run: |
